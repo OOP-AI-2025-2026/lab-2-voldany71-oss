@@ -2,76 +2,64 @@ package ua.opnu;
 
 public class TimeSpan {
 
-    // Поля класу
-    private int hours;   // години
-    private int minutes; // хвилини (0-59)
+    // Поле для хранения общего количества минут
+    private int totalMinutes;
 
     // Конструктор
-    public TimeSpan(int hours, int minutes) {
+    TimeSpan(int hours, int minutes) {
         if (hours < 0 || minutes < 0 || minutes > 59) {
             throw new IllegalArgumentException("Неправильні значення годин або хвилин");
         }
-        this.hours = hours;
-        this.minutes = minutes;
+        this.totalMinutes = hours * 60 + minutes;
     }
 
-    // Повертає години без хвилин
-    public int getHours() {
-        return hours;
+    // Получить количество часов без учета минут
+    int getHours() {
+        return totalMinutes / 60;
     }
 
-    // Повертає хвилини без годин
-    public int getMinutes() {
-        return minutes;
+    // Получить количество минут без учета часов
+    int getMinutes() {
+        return totalMinutes % 60;
     }
 
-    // Додає години і хвилини
-    public void add(int addHours, int addMinutes) {
-        if (addHours < 0 || addMinutes < 0 || addMinutes > 59) {
+    // Добавить часы и минуты
+    void add(int hours, int minutes) {
+        if (hours < 0 || minutes < 0 || minutes > 59) {
             throw new IllegalArgumentException("Неправильні значення годин або хвилин");
         }
-        this.minutes += addMinutes;
-        this.hours += addHours + this.minutes / 60;
-        this.minutes %= 60;
+        totalMinutes += hours * 60 + minutes;
     }
 
-    // Додає інший TimeSpan
-    public void addTimeSpan(TimeSpan timespan) {
+    // Добавить другой TimeSpan
+    void addTimeSpan(TimeSpan timespan) {
         add(timespan.getHours(), timespan.getMinutes());
     }
 
-    // Повертає загальні години у вигляді дробового числа
-    public double getTotalHours() {
-        return hours + minutes / 60.0;
+    // Получить общее количество часов в виде дробного числа
+    double getTotalHours() {
+        return totalMinutes / 60.0;
     }
 
-    // Повертає загальні хвилини
-    public int getTotalMinutes() {
-        return hours * 60 + minutes;
+    // Получить общее количество минут
+    int getTotalMinutes() {
+        return totalMinutes;
     }
 
-    // Віднімає інший TimeSpan
-    public void subtract(TimeSpan span) {
-        int totalThis = getTotalMinutes();
-        int totalSpan = span.getTotalMinutes();
-
-        if (totalSpan > totalThis) {
+    // Вычесть другой TimeSpan
+    void subtract(TimeSpan span) {
+        int result = totalMinutes - span.totalMinutes;
+        if (result < 0) {
             throw new IllegalArgumentException("Вхідний інтервал більший за поточний");
         }
-
-        int totalResult = totalThis - totalSpan;
-        this.hours = totalResult / 60;
-        this.minutes = totalResult % 60;
+        totalMinutes = result;
     }
 
-    // Масштабує інтервал
-    public void scale(int factor) {
+    // Увеличить TimeSpan в factor раз
+    void scale(int factor) {
         if (factor <= 0) {
             throw new IllegalArgumentException("Фактор повинен бути більше нуля");
         }
-
-        int totalMinutes = getTotalMinutes() * factor;
-        this.hours = totalMinutes / 60;
-        this.minutes = totalMinutes % 60;
+        totalMinutes *= factor;
     }
 }
