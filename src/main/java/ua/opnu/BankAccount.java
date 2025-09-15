@@ -5,66 +5,47 @@ public class BankAccount {
     double balance;
     double transactionFee;
 
-    // Конструктор
-    public BankAccount(String name, double balance) {
-        this.name = name;
-        this.balance = balance;
-        this.transactionFee = 0; // початкове значення комісії
+    // Дефолтный конструктор
+    public BankAccount() {
+        this.name = "";
+        this.balance = 0;
+        this.transactionFee = 0;
     }
 
-    // Встановлення комісії
-    public void setTransactionFee(double fee) {
-        if (fee < 0) {
-            throw new IllegalArgumentException("Комісія не може бути від'ємною");
-        }
-        this.transactionFee = fee;
-    }
-
-    // Поповнення рахунку
+    // Пополнение счёта
     void deposit(double amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("Сума депозиту повинна бути більше нуля");
+            // по условию: для неверных аргументов не изменяем баланс
+            return;
         }
         balance += amount;
     }
 
-    // Повертає баланс
-    double getBalance() {
-        return this.balance;
-    }
-
-    // Зняття грошей з урахуванням комісії
+    // Снятие средств с учётом комиссии — возвращаем boolean
     boolean withdraw(double amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("Сума зняття повинна бути більше нуля");
+            return false;
         }
-
-        double totalAmount = amount + transactionFee;
-        if (balance < totalAmount) {
-            return false; // недостатньо коштів
+        double total = amount + transactionFee;
+        if (balance < total) {
+            return false; // недостаточно средств — не меняем баланс
         }
-
-        balance -= totalAmount;
+        balance -= total;
         return true;
     }
 
-    // Перевід грошей на інший рахунок з урахуванням комісії
+    // Перевод на другой счёт: списываем amount + комиссия с текущего и добавляем amount на receiver
     boolean transfer(BankAccount receiver, double amount) {
-        if (amount <= 0) {
-            throw new IllegalArgumentException("Сума переводу повинна бути більше нуля");
+        if (receiver == null || amount <= 0) {
+            return false;
         }
-
-        double totalAmount = amount + transactionFee;
-        if (balance < totalAmount) {
-            return false; // недостатньо коштів
+        double total = amount + transactionFee;
+        if (balance < total) {
+            return false; // недостаточно средств — не переводим
         }
-
-        // Знімаємо гроші з поточного рахунку
-        balance -= totalAmount;
-
-        // Додаємо гроші на рахунок отримувача
+        balance -= total;
+        // receiver.deposit доступен (package-private) и корректно добавит деньги
         receiver.deposit(amount);
-
         return true;
     }
 }

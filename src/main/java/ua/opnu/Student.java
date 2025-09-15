@@ -3,9 +3,9 @@ package ua.opnu;
 import java.util.ArrayList;
 
 public class Student {
-    private String name;
-    private int year; // від 1 до 4
-    private ArrayList<String> courses; // список дисциплін
+    private final String name;
+    private final int year; // від 1 до 4
+    private final ArrayList<String> courses; // список дисциплін
 
     // Конструктор
     public Student(String name, int year) {
@@ -55,21 +55,18 @@ public class Student {
 
     // Тестовий main
     public static void main(String[] args) {
-        // Створюємо студента
         Student student = new Student("Іван", 2);
 
-        // Додаємо дисципліни
         student.addCourse("Математика");
         student.addCourse("Фізика");
         student.addCourse("Програмування");
 
-        // Виводимо кількість дисциплін
         System.out.println(student.getName() + ": кількість вивчаємих дисциплін - " + student.getCourseCount());
-
-        // Виводимо рік навчання
         System.out.println(student.getName() + ": рік навчання - " + student.getYear());
-
-        // Виводимо суму, сплачену за навчання
         System.out.println(student.getName() + ": заплатив за навчання - " + student.getTuition());
+
+        // Виклик, щоб dropAll() не був "never used"
+        student.dropAll();
+        System.out.println("Після відрахування дисциплін: " + student.getCourseCount());
     }
 }
