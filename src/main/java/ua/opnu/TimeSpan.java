@@ -5,7 +5,7 @@ public class TimeSpan {
     // Поле для хранения общего количества минут
     private int totalMinutes;
 
-    // Конструктор
+    // Конструкто
     TimeSpan(int hours, int minutes) {
         if (hours < 0 || minutes < 0 || minutes > 59) {
             throw new IllegalArgumentException("Неправильні значення годин або хвилин");
