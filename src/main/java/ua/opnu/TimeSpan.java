@@ -6,9 +6,10 @@ public class TimeSpan {
 
     TimeSpan(int hours, int minutes) {
         if (hours < 0 || minutes < 0 || minutes > 59) {
-            throw new IllegalArgumentException("Неправильні значення годин або хвилин");
+            this.totalMinutes = 0; // некорректные значения -> 0
+        } else {
+            this.totalMinutes = hours * 60 + minutes;
         }
-        this.totalMinutes = hours * 60 + minutes;
     }
 
     int getHours() {
